@@ -31,3 +31,22 @@ v21 Desktop Full-Board Update
 - Other app tabs retain the original 900px width.
 - Mobile and portrait fixes are preserved unchanged.
 - No draft calculation, persistence, roster-placement, Best Available, or graph logic changed.
+
+
+v22 Graph + Draft Board Visual Update
+- Graphs desktop view is capped to a compact 1180px content area.
+- Graph and selected player data display side-by-side on desktop.
+- Graph height reduced to 320px so controls, chart, and player data fit on one screen more easily.
+- The top visible player is shown in the player-data panel automatically.
+- Draft board cells are softly color-coded by position (QB/RB/WR/TE/FLEX/DST/K/HC/Bench).
+- Filled FLEX/OP/Bench cells use the drafted player's actual position color.
+- Manager header names and stats are slightly larger on desktop.
+- Desktop full-board width, mobile layout, portrait fix, persistence, and draft logic are unchanged.
+
+
+v23 Live Draft Only Wide
+- Only Live Draft uses the expanded desktop width.
+- Managers, Best Available, and Graphs use the normal compact 900px app width.
+- Graphs retain compact chart + player detail layout.
+- Draft board position colors and larger manager header fonts are preserved.
+- Mobile/portrait behavior, persistence, and draft logic are unchanged.

@@ -278,6 +278,72 @@ select,input{width:100%;margin-top:5px;padding:11px;min-height:44px;font-size:16
     font-size:10px;
   }
 }
+
+@media(min-width:1000px){
+  #draftGraphs{
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  #draftGraphs .pos-tabs{margin-bottom:6px}
+  #draftGraphs .graph-controls{margin-bottom:6px}
+  #draftGraphs .graph-card{padding:10px 12px 12px}
+  #draftGraphs .legend{margin-bottom:4px}
+  #draftGraphs .graph-body{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 250px;
+    gap:12px;
+    align-items:start;
+  }
+  #draftGraphs .chart-wrap{overflow:hidden;min-width:0}
+  #draftGraphs #chart{
+    min-width:0;
+    width:100%;
+    height:300px;
+  }
+  #draftGraphs .detail{
+    margin-top:0;
+    min-height:140px;
+    font-size:13px;
+    line-height:1.45;
+  }
+}
+
+.draft-cell.pos-qb{background:#eaf3ff}
+.draft-cell.pos-rb{background:#eaf8ee}
+.draft-cell.pos-wr{background:#fff3e4}
+.draft-cell.pos-te{background:#f3edff}
+.draft-cell.pos-flex,.draft-cell.pos-superflex{background:#edf1ff}
+.draft-cell.pos-dst{background:#eef2f6}
+.draft-cell.pos-k{background:#fff8d8}
+.draft-cell.pos-hc{background:#ffedf3}
+.draft-cell.pos-bench{background:#f8fafc}
+button.draft-cell.pos-qb:hover{background:#dcecff}
+button.draft-cell.pos-rb:hover{background:#dcf3e2}
+button.draft-cell.pos-wr:hover{background:#ffe8ca}
+button.draft-cell.pos-te:hover{background:#e8dcff}
+button.draft-cell.pos-flex:hover,button.draft-cell.pos-superflex:hover{background:#dfe6ff}
+button.draft-cell.pos-dst:hover{background:#e3e8ee}
+button.draft-cell.pos-k:hover{background:#fff1b8}
+button.draft-cell.pos-hc:hover{background:#ffdee9}
+
+@media(min-width:1000px){
+  .wrap.draft-wide .draft-manager-head{
+    min-height:80px;
+  }
+  .wrap.draft-wide .draft-manager-name{
+    font-size:13px;
+    line-height:1.2;
+  }
+  .wrap.draft-wide .draft-manager-stats{
+    font-size:10.5px;
+    line-height:1.45;
+  }
+  .wrap.draft-wide .draft-team-values{
+    font-size:10.5px;
+    line-height:1.4;
+  }
+}
 </style>
 </head>
 <body>
@@ -489,7 +555,7 @@ select,input{width:100%;margin-top:5px;padding:11px;min-height:44px;font-size:16
     
 <div class="pos-tabs"><button class="pos-tab active" data-pos="RB">RB</button><button class="pos-tab" data-pos="WR">WR</button><button class="pos-tab" data-pos="QB">QB</button><button class="pos-tab" data-pos="TE">TE</button></div>
 <div class="controls graph-controls"><label>Show through rank<select id="limit"><option value="15">Top 15</option><option value="25">Top 25</option><option value="40">Top 40</option><option value="999" selected>All</option></select></label><label>Player search<input id="search" type="search" placeholder="Search"></label></div>
-<div class="card"><div class="legend"><span><i class="sw"></i>Calculated value</span><span class="hist-legend"><i class="sw hist"></i>Historical cost</span><span><i class="sw draft-dot"></i>Winning bid</span></div><div class="chart-wrap"><svg id="chart" viewBox="0 0 720 390"></svg></div><div id="detail" class="detail">Tap a chart point or player below.</div></div>
+<div class="card graph-card"><div class="legend"><span><i class="sw"></i>Calculated value</span><span class="hist-legend"><i class="sw hist"></i>Historical cost</span><span><i class="sw draft-dot"></i>Winning bid</span></div><div class="graph-body"><div class="chart-wrap"><svg id="chart" viewBox="0 0 720 390"></svg></div><div id="detail" class="detail">Tap a chart point to view player data.</div></div></div>
 <div class="graph-hidden"><h2 class="section-title">Players</h2><div class="smallhead"><button class="vb-sort left" data-vbsort="rank" type="button">Rank</button><div>Player</div><button class="vb-sort" data-vbsort="calc" type="button">Calc</button><button class="vb-sort" data-vbsort="hist" type="button">Hist</button><button class="vb-sort" data-vbsort="edge" type="button">Value</button></div><div id="valueList" class="value-list"></div></div>
 
   </div>
@@ -825,7 +891,9 @@ document.getElementById('resetProfile').addEventListener('click',()=>{
 document.querySelectorAll('.main-tab').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('.main-tab').forEach(b=>b.classList.toggle('active',b===btn));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===btn.dataset.view));
-  document.querySelector('.wrap')?.classList.toggle('draft-wide',btn.dataset.view==='draftView');
+  const liveActive=btn.dataset.view==='draftView'&&document.querySelector('.draft-subtab.active')?.dataset.draftPanel==='draftLive';
+  document.querySelector('.wrap')?.classList.toggle('draft-wide',liveActive);
+  if(liveActive)setTimeout(renderDraftBoard,0);
 }));
 
 // VALUE BOARD
@@ -862,7 +930,13 @@ function renderList(){
  valueList.innerHTML='';
  d.forEach(x=>{const r=document.createElement('button');r.type='button';r.className='vrow';r.style.textAlign='left';r.style.width='100%';r.innerHTML=`<div class="rank">${x.pos}${x.rank}</div><div class="player">${x.player}</div><div class="num">${money(x.calc)}</div><div class="num">${hasHistory()?money(x.hist):'—'}</div><div class="num ${hasHistory()?(x.edge>=0?'edgepos':'edgeneg'):''}">${hasHistory()?signedMoney(x.edge):'—'}</div>`;r.addEventListener('click',()=>choose(x));valueList.appendChild(r)})
 }
-function renderValue(){renderChart();renderList()}
+function renderValue(){
+  renderChart();renderList();
+  if(detail && (detail.textContent.startsWith('Tap a chart') || !detail.textContent.trim())){
+    const first=data.filter(x=>x.pos===currentPos&&x.rank<=Number(limit.value)).sort((a,b)=>a.rank-b.rank||a.idx-b.idx)[0];
+    if(first)choose(first);
+  }
+}
 document.querySelectorAll('.pos-tab').forEach(btn=>btn.addEventListener('click',()=>{currentPos=btn.dataset.pos;document.querySelectorAll('.pos-tab').forEach(b=>b.classList.toggle('active',b===btn));renderValue()}));
 limit.addEventListener('change',renderValue);search.addEventListener('input',renderList);
 document.querySelectorAll('[data-vbsort]').forEach(btn=>btn.addEventListener('click',()=>{
@@ -1111,6 +1185,18 @@ function renderManagerSelects(){
   });
   const nom=document.getElementById('nomManager');if(nom&&!nom.value)nom.value=draftState.myManagerId;
 }
+function draftPosClass(pos){
+  if(pos==='QB')return 'pos-qb';
+  if(pos==='RB')return 'pos-rb';
+  if(pos==='WR')return 'pos-wr';
+  if(pos==='TE')return 'pos-te';
+  if(pos==='FLEX')return 'pos-flex';
+  if(pos==='SUPERFLEX')return 'pos-superflex';
+  if(pos==='D/ST')return 'pos-dst';
+  if(pos==='K')return 'pos-k';
+  if(pos==='HC')return 'pos-hc';
+  return 'pos-bench';
+}
 function renderDraftBoard(){
   const board=document.getElementById('draftBoard');if(!board)return;const defs=draftRosterDefs(),managers=draftState.managers;
   const wideDraft=document.querySelector('.wrap')?.classList.contains('draft-wide')&&window.innerWidth>=1000;
@@ -1120,8 +1206,8 @@ function renderDraftBoard(){
   managers.forEach(m=>{const st=managerStats(m.id),h=document.createElement('div');h.className='draft-manager-head'+(m.id===draftState.myManagerId?' my-team':'');h.innerHTML='<div class="draft-manager-name">'+escapeHtml(m.name)+'</div><div class="draft-manager-stats">Cash '+money(st.cash)+' · Max '+money(st.maxBid)+'</div><div class="draft-team-values">'+(hasHistory()?'H '+signedMoney(st.histDelta)+' · ':'')+'C '+signedMoney(st.calcDelta)+'</div>';head.appendChild(h)});board.appendChild(head);
   const placements={};managers.forEach(m=>placements[m.id]=placeManagerPicks(m.id));
   defs.forEach(def=>{const row=document.createElement('div');row.className='draft-board-row';row.style.gridTemplateColumns=cols;const lab=document.createElement('div');lab.className='draft-board-label';lab.textContent=def.label;row.appendChild(lab);
-    managers.forEach(m=>{const pick=placements[m.id].slotMap[def.id];if(!pick){const e=document.createElement('div');e.className='draft-cell';e.innerHTML='<span class="draft-empty">—</span>';row.appendChild(e);return}
-      const c=candidateByKey(pick.candidateKey),b=document.createElement('button');b.type='button';b.className='draft-cell';b.innerHTML='<div class="draft-cell-player">'+escapeHtml(c?c.name:'Unknown')+'</div><div class="draft-cell-paid">Paid <b>'+money(pick.bid)+'</b></div><div class="draft-cell-comp">'+(hasHistory()?'H '+money(c?.hist||0)+' · ':'')+'C '+money(c?.calc||0)+'</div>';b.addEventListener('click',()=>openEditPick(pick.id));row.appendChild(b)});
+    managers.forEach(m=>{const pick=placements[m.id].slotMap[def.id];if(!pick){const e=document.createElement('div');e.className='draft-cell '+draftPosClass(def.type);e.innerHTML='<span class="draft-empty">—</span>';row.appendChild(e);return}
+      const c=candidateByKey(pick.candidateKey),b=document.createElement('button');b.type='button';b.className='draft-cell '+draftPosClass(c?.type||def.type);b.innerHTML='<div class="draft-cell-player">'+escapeHtml(c?c.name:'Unknown')+'</div><div class="draft-cell-paid">Paid <b>'+money(pick.bid)+'</b></div><div class="draft-cell-comp">'+(hasHistory()?'H '+money(c?.hist||0)+' · ':'')+'C '+money(c?.calc||0)+'</div>';b.addEventListener('click',()=>openEditPick(pick.id));row.appendChild(b)});
     board.appendChild(row);
   });
   document.getElementById('draftBoardMeta').textContent=league.teams+' managers · '+money(league.budget)+' budget · '+(league.flexType==='Superflex'?(league.flexLabel||'Superflex'):'FLEX');document.getElementById('draftLeagueCash').textContent=money(leagueCashRemaining());document.getElementById('draftPickLabel').textContent='Next Pick #'+nextPickNo();
@@ -1169,6 +1255,9 @@ function renderDraftAll(){if(!draftState)return;syncDraftManagers();renderManage
 document.querySelectorAll('.draft-subtab').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('.draft-subtab').forEach(b=>b.classList.toggle('active',b===btn));
   document.querySelectorAll('.draft-panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.draftPanel));
+  const wide=btn.dataset.draftPanel==='draftLive';
+  document.querySelector('.wrap')?.classList.toggle('draft-wide',wide);
+  if(wide)setTimeout(renderDraftBoard,0);
   if(btn.dataset.draftPanel==='draftGraphs')renderValue();
 }));
 document.getElementById('nomSearch').addEventListener('input',()=>{
