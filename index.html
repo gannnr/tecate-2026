@@ -244,6 +244,40 @@ select,input{width:100%;margin-top:5px;padding:11px;min-height:44px;font-size:16
   }
   .draft-card{max-width:100%;overflow:hidden}
 }
+
+@media(min-width:1000px){
+  .wrap.draft-wide{
+    max-width:min(1800px,calc(100vw - 32px));
+  }
+  .wrap.draft-wide .draft-live-layout{
+    grid-template-columns:300px minmax(0,1fr);
+    gap:10px;
+  }
+  .wrap.draft-wide .draft-board{
+    width:100%;
+    min-width:100%;
+  }
+  .wrap.draft-wide .draft-board-label{
+    padding-left:6px;
+    padding-right:6px;
+  }
+  .wrap.draft-wide .draft-manager-head{
+    padding:6px;
+  }
+  .wrap.draft-wide .draft-manager-name{
+    font-size:11px;
+  }
+  .wrap.draft-wide .draft-manager-stats,
+  .wrap.draft-wide .draft-team-values{
+    font-size:9px;
+  }
+  .wrap.draft-wide .draft-cell{
+    padding:6px;
+  }
+  .wrap.draft-wide .draft-cell-player{
+    font-size:10px;
+  }
+}
 </style>
 </head>
 <body>
@@ -791,6 +825,7 @@ document.getElementById('resetProfile').addEventListener('click',()=>{
 document.querySelectorAll('.main-tab').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('.main-tab').forEach(b=>b.classList.toggle('active',b===btn));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===btn.dataset.view));
+  document.querySelector('.wrap')?.classList.toggle('draft-wide',btn.dataset.view==='draftView');
 }));
 
 // VALUE BOARD
@@ -1077,7 +1112,9 @@ function renderManagerSelects(){
   const nom=document.getElementById('nomManager');if(nom&&!nom.value)nom.value=draftState.myManagerId;
 }
 function renderDraftBoard(){
-  const board=document.getElementById('draftBoard');if(!board)return;const defs=draftRosterDefs(),managers=draftState.managers,cols='78px repeat('+managers.length+', 150px)';
+  const board=document.getElementById('draftBoard');if(!board)return;const defs=draftRosterDefs(),managers=draftState.managers;
+  const wideDraft=document.querySelector('.wrap')?.classList.contains('draft-wide')&&window.innerWidth>=1000;
+  const cols=wideDraft?('70px repeat('+managers.length+', minmax(90px,1fr))'):('78px repeat('+managers.length+', 150px)');
   board.innerHTML='';board.style.minWidth=(78+managers.length*150)+'px';
   const head=document.createElement('div');head.className='draft-board-row';head.style.gridTemplateColumns=cols;const first=document.createElement('div');first.className='draft-board-label';first.style.top='0';first.style.zIndex='8';first.textContent='Roster';head.appendChild(first);
   managers.forEach(m=>{const st=managerStats(m.id),h=document.createElement('div');h.className='draft-manager-head'+(m.id===draftState.myManagerId?' my-team':'');h.innerHTML='<div class="draft-manager-name">'+escapeHtml(m.name)+'</div><div class="draft-manager-stats">Cash '+money(st.cash)+' · Max '+money(st.maxBid)+'</div><div class="draft-team-values">'+(hasHistory()?'H '+signedMoney(st.histDelta)+' · ':'')+'C '+signedMoney(st.calcDelta)+'</div>';head.appendChild(h)});board.appendChild(head);
@@ -1161,6 +1198,14 @@ applyProfileUI();
 populateInputs();
 recalculate();
 renderDraftAll();
+
+let draftResizeTimer=null;
+window.addEventListener('resize',()=>{
+  clearTimeout(draftResizeTimer);
+  draftResizeTimer=setTimeout(()=>{
+    if(document.querySelector('.wrap')?.classList.contains('draft-wide'))renderDraftBoard();
+  },120);
+});
 </script>
 </body>
 </html>

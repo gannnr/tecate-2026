@@ -21,3 +21,13 @@ v20 Portrait Width Fix
 - Constrains nominator, comp/value grids, inputs, select, and bid controls to phone width.
 - Desktop and landscape behavior unchanged.
 - No JavaScript/draft logic changed.
+
+
+v21 Desktop Full-Board Update
+- Draft mode alone expands up to 1800px / available browser width on desktop.
+- Live Draft nominator is ~300px on the left.
+- Manager columns flex down to 90px to use available desktop space.
+- 10-team boards should fit fully on sufficiently wide desktop windows; 12-team boards may need slight horizontal scrolling on narrower monitors.
+- Other app tabs retain the original 900px width.
+- Mobile and portrait fixes are preserved unchanged.
+- No draft calculation, persistence, roster-placement, Best Available, or graph logic changed.
