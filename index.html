@@ -344,12 +344,101 @@ button.draft-cell.pos-hc:hover{background:#ffdee9}
     line-height:1.4;
   }
 }
+
+/* v26 home screen */
+.home-screen{display:block}
+.home-screen.hidden{display:none}
+.app-shell{display:none}
+.app-shell.active{display:block}
+.home-select-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px}
+.home-format-wrap{display:none;margin-top:12px}
+.home-format-wrap.show{display:block}
+.home-format-label{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px}
+.home-format-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.home-format-btn{min-height:44px;border:1px solid var(--border);border-radius:12px;background:var(--card);font-size:14px;font-weight:900;color:var(--text)}
+.home-format-btn.active{background:var(--text);border-color:var(--text);color:#fff}
+.home-continue{width:100%;margin-top:12px;min-height:46px;border:1px solid var(--border);border-radius:12px;background:#e2e8f0;color:var(--muted);font-size:14px;font-weight:900}
+.home-continue.ready{background:var(--text);border-color:var(--text);color:#fff}
+.app-topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.change-league{border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--muted);font-size:11px;font-weight:800;min-height:36px;padding:7px 10px;white-space:nowrap}
+.snake-mode #budgetInfoCard{display:none}
+.snake-mode #customNote{display:none!important}
+
+/* v27 Snake Draft Mode */
+.snake-mode .main-tab[data-view="lineupView"]{display:none}
+.snake-mode .draft-subtab[data-draft-panel="draftGraphs"]{display:none}
+.snake-mode .draft-subtabs{grid-template-columns:repeat(3,1fr)}
+.snake-mode #draftLeagueCash{display:none}
+.snake-mode #draftLive .draft-mini-stat{display:none}
+.snake-mode #draftLive .nom-comp-grid{display:none}
+.snake-mode #draftLive .draft-field-label{display:none}
+.snake-mode #draftLive .bid-control{display:none}
+.snake-mode #draftGraphs{display:none!important}
+.snake-mode .snake-hide{display:none!important}
+.snake-only{display:none}
+.snake-mode .snake-only{display:table-cell}
+.snake-mode .auction-only{display:none!important}
+.snake-pick-cell{position:relative;min-height:67px;padding:22px 8px 8px;border-left:1px solid var(--border);background:var(--card);text-align:left}
+button.snake-pick-cell{width:100%;border-top:0;border-right:0;border-bottom:0;border-radius:0;color:var(--text)}
+.snake-pick-tag{position:absolute;top:5px;left:7px;font-size:9px;font-weight:900;color:var(--muted);letter-spacing:.02em}
+.snake-pick-cell.filled.pos-qb{background:#eaf3ff}
+.snake-pick-cell.filled.pos-rb{background:#eaf8ee}
+.snake-pick-cell.filled.pos-wr{background:#fff3e4}
+.snake-pick-cell.filled.pos-te{background:#f3edff}
+.snake-pick-cell.filled.pos-dst{background:#eef2f6}
+.snake-pick-cell.filled.pos-k{background:#fff8d8}
+.snake-pick-cell.filled.pos-hc{background:#ffedf3}
+.snake-pick-cell .draft-cell-player{margin-top:2px}
+.snake-value-pos{color:var(--green);font-weight:900}
+.snake-value-neg{color:var(--red);font-weight:900}
+.snake-value-zero{color:var(--text);font-weight:900}
+.snake-mode #draftBest .best-table{min-width:890px}
+.snake-mode #draftBest .best-table .snake-only{display:table-cell}
+.snake-mode #draftBest .best-table .auction-only{display:none!important}
+.snake-mode #draftEditOverlay .edit-bid-wrap{display:none}
+.snake-mode #editPickMeta{padding-top:2px}
+@media(max-width:430px){
+  .snake-mode .draft-subtabs{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 <body>
 
 <div class="wrap">
-<h1>Draft Companion</h1><div class="sub">League-specific auction rankings + lineup builder</div>
+<section id="homeScreen" class="home-screen">
+  <h1>Draft Companion</h1>
+  <div class="sub">Select a league to begin</div>
+
+  <div class="home-select-card">
+    <label>Select League
+      <select id="homeLeagueSelect">
+        <option value="" selected>Select League</option>
+        <option value="tecate">Tecate</option>
+        <option value="420">42O_68.9</option>
+        <option value="custom">Custom League</option>
+      </select>
+    </label>
+
+    <div id="homeFormatWrap" class="home-format-wrap">
+      <div class="home-format-label">Draft Format</div>
+      <div class="home-format-grid">
+        <button type="button" class="home-format-btn" data-home-format="auction">Auction</button>
+        <button type="button" class="home-format-btn" data-home-format="snake">Snake</button>
+      </div>
+    </div>
+
+    <button id="homeContinueBtn" type="button" class="home-continue" disabled>SELECT LEAGUE</button>
+  </div>
+</section>
+
+<div id="appShell" class="app-shell">
+<div class="app-topbar">
+  <div>
+    <h1>Draft Companion</h1>
+    <div class="sub" id="appSubtitle">League-specific auction rankings + lineup builder</div>
+  </div>
+  <button id="changeLeagueBtn" class="change-league" type="button">Change League</button>
+</div>
 <div class="main-tabs">
   <button class="main-tab active" data-view="leagueView">League Setup</button>
   <button class="main-tab" data-view="rankingsView">Total Rankings</button>
@@ -390,7 +479,7 @@ button.draft-cell.pos-hc:hover{background:#ffdee9}
     </div>
   </div>
 
-  <div class="input-card">
+  <div class="input-card" id="budgetInfoCard">
     <h2>Budget Info</h2>
     <div class="input-grid">
       <label>League Budget<input data-league="budget" type="number" min="1" max="1000" step="1"></label>
@@ -490,19 +579,19 @@ button.draft-cell.pos-hc:hover{background:#ffdee9}
           <span id="nomPlayerMeta">Search above to nominate a player.</span>
         </div>
 
-        <div class="nom-comp-grid">
+        <div class="nom-comp-grid auction-only">
           <div class="nom-comp hist-only"><span>Historical Comp</span><b id="nomHistComp">—</b></div>
           <div class="nom-comp"><span>Calculated Comp</span><b id="nomCalcComp">—</b></div>
         </div>
 
-        <div class="draft-field-label">Winning Bid</div>
-        <div class="bid-control">
+        <div class="draft-field-label auction-only">Winning Bid</div>
+        <div class="bid-control auction-only">
           <button id="nomBidDown" type="button" aria-label="Decrease bid">↓</button>
           <input id="nomBid" type="number" min="1" step="1" value="1" inputmode="numeric">
           <button id="nomBidUp" type="button" aria-label="Increase bid">↑</button>
         </div>
 
-        <div class="nom-comp-grid">
+        <div class="nom-comp-grid auction-only">
           <div id="nomHistDeltaBox" class="nom-delta hist-only"><span>Hist Value</span><b id="nomHistDelta">—</b></div>
           <div id="nomCalcDeltaBox" class="nom-delta"><span>Calc Value</span><b id="nomCalcDelta">—</b></div>
         </div>
@@ -539,9 +628,12 @@ button.draft-cell.pos-hc:hover{background:#ffdee9}
             <th><button type="button" data-best-sort="name">Player</button></th>
             <th><button type="button" data-best-sort="posSort">Pos</button></th>
             <th><button type="button" data-best-sort="nfl">NFL</button></th>
-            <th class="num"><button type="button" data-best-sort="bid">Winning Bid</button></th>
-            <th class="num"><button type="button" data-best-sort="calc">Calc</button></th>
-            <th class="num hist-only"><button type="button" data-best-sort="hist">Hist</button></th>
+            <th class="num snake-only"><button type="button" data-best-sort="projectedPick">Projected Pick</button></th>
+            <th class="num snake-only"><button type="button" data-best-sort="draftedPick">Drafted Pick</button></th>
+            <th class="num snake-only"><button type="button" data-best-sort="pickValue">Value</button></th>
+            <th class="num auction-only"><button type="button" data-best-sort="bid">Winning Bid</button></th>
+            <th class="num auction-only"><button type="button" data-best-sort="calc">Calc</button></th>
+            <th class="num hist-only auction-only"><button type="button" data-best-sort="hist">Hist</button></th>
             <th class="num"><button type="button" data-best-sort="ftps">Fantasy Pts</button></th>
             <th class="num"><button type="button" data-best-sort="vosa">VOSA</button></th>
           </tr></thead>
@@ -567,7 +659,7 @@ button.draft-cell.pos-hc:hover{background:#ffdee9}
       <div><strong id="editPickName">Edit Pick</strong><div id="editPickMeta" class="draft-muted"></div></div>
       <button id="editPickClose" type="button" class="clear">Close</button>
     </div>
-    <label>Winning Bid
+    <label class="edit-bid-wrap">Winning Bid
       <div class="bid-control edit-bid">
         <button id="editBidDown" type="button" aria-label="Decrease bid">↓</button>
         <input id="editPickBid" type="number" min="1" step="1" inputmode="numeric">
@@ -583,7 +675,8 @@ button.draft-cell.pos-hc:hover{background:#ffdee9}
   </div>
 </div>
 
-<div class="footer">Offline Draft Companion • 522 offensive players • league-specific scoring and auction history</div>
+<div class="footer">Offline Draft Companion • v29 • 522 offensive players • league-specific scoring and auction history</div>
+</div>
 </div>
 
 <script>
@@ -619,7 +712,10 @@ let editPickId=null;
 
 function safeStorageGet(key){try{return localStorage.getItem(key)}catch(e){return null}}
 function safeStorageSet(key,val){try{localStorage.setItem(key,val);return true}catch(e){return false}}
-function draftStorageKey(profile=activeProfile){return 'draftCompanion:draft:'+profile}
+function draftStorageKey(profile=activeProfile){
+  if(profile==='custom')return 'draftCompanion:draft:custom:'+(snakeMode()?'snake':'auction');
+  return 'draftCompanion:draft:'+profile;
+}
 function profileStorageKey(profile=activeProfile){return 'draftCompanion:profile:'+profile}
 function migrateStorage(){
   Object.keys(profileStates).forEach(profile=>{
@@ -652,7 +748,9 @@ league=profileStates[activeProfile].league;scoring=profileStates[activeProfile].
 function saveProfileConfig(){safeStorageSet(profileStorageKey(),JSON.stringify({league,scoring}))}
 function defaultDraftState(){return {version:1,managers:[],myManagerId:'m1',picks:[]}}
 function loadDraftState(profile=activeProfile){
-  const raw=safeStorageGet(draftStorageKey(profile));let s=defaultDraftState();
+  let raw=safeStorageGet(draftStorageKey(profile));
+  if(!raw&&profile==='custom'&&!snakeMode())raw=safeStorageGet('draftCompanion:draft:custom');
+  let s=defaultDraftState();
   if(raw){try{s={...s,...JSON.parse(raw)}}catch(e){}}
   if(!Array.isArray(s.managers))s.managers=[];if(!Array.isArray(s.picks))s.picks=[];return s;
 }
@@ -843,13 +941,114 @@ function applyProfileUI(){
 }
 function switchProfile(key){
   if(!profileStates[key])return;
+  if(key!=='custom'&&document.getElementById('appShell')?.classList.contains('snake-mode'))applyDraftFormatMode('auction');
   activeProfile=key;league=profileStates[key].league;scoring=profileStates[key].scoring;
   historicalByRank=profileStates[key].history;lineupState=lineupStates[key];draftState=loadDraftState(key);
   syncDraftManagers();applyProfileUI();populateInputs();recalculate();
-  document.getElementById('setupStatus').textContent=profileStates[key].name+' loaded';
+  document.getElementById('setupStatus').textContent=
+    profileStates[key].name+' loaded'+(key==='custom'?' · '+(snakeMode()?'SNAKE':'AUCTION'):'');
 }
 
 document.getElementById('leagueProfile').addEventListener('change',e=>switchProfile(e.target.value));
+
+let selectedHomeFormat=null;
+
+function setHomeContinue(label,ready){
+  const btn=document.getElementById('homeContinueBtn');
+  btn.textContent=label;
+  btn.disabled=!ready;
+  btn.classList.toggle('ready',ready);
+}
+
+function applyDraftFormatMode(format){
+  const snake=format==='snake';
+  const shell=document.getElementById('appShell');
+  shell.classList.toggle('snake-mode',snake);
+  shell.dataset.draftFormat=snake?'snake':'auction';
+  document.getElementById('appSubtitle').textContent=snake
+    ? 'League-specific snake draft rankings + live draft'
+    : 'League-specific auction rankings + lineup builder';
+  localStorage.setItem('draftCompanion:customDraftFormat',snake?'snake':'auction');
+
+  const overallHead=document.querySelector('[data-ranksort="overallRank"]');
+  if(overallHead)overallHead.textContent=snake?'Projected Pick':'Overall';
+
+  if(snake){
+    const activeMain=document.querySelector('.main-tab.active');
+    if(activeMain?.dataset.view==='lineupView'){
+      document.querySelectorAll('.main-tab').forEach(b=>b.classList.toggle('active',b.dataset.view==='leagueView'));
+      document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='leagueView'));
+    }
+    const graphTab=document.querySelector('.draft-subtab[data-draft-panel="draftGraphs"]');
+    if(graphTab?.classList.contains('active')){
+      document.querySelectorAll('.draft-subtab').forEach(b=>b.classList.toggle('active',b.dataset.draftPanel==='draftManagers'));
+      document.querySelectorAll('.draft-panel').forEach(p=>p.classList.toggle('active',p.id==='draftManagers'));
+    }
+  }
+  if(typeof renderTotalRankings==='function')renderTotalRankings();
+  if(draftState&&typeof renderDraftAll==='function')renderDraftAll();
+}
+
+function openLeagueFromHome(profile,format='auction'){
+  applyDraftFormatMode(profile==='custom'?format:'auction');
+  switchProfile(profile);
+
+  document.querySelectorAll('.main-tab').forEach(b=>b.classList.toggle('active',b.dataset.view==='leagueView'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='leagueView'));
+  document.querySelector('.wrap')?.classList.remove('draft-wide');
+
+  document.getElementById('homeScreen').classList.add('hidden');
+  document.getElementById('appShell').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showHomeScreen(){
+  document.querySelector('.wrap')?.classList.remove('draft-wide');
+  document.getElementById('appShell').classList.remove('active');
+  document.getElementById('homeScreen').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+document.getElementById('homeLeagueSelect').addEventListener('change',e=>{
+  const value=e.target.value;
+  const formatWrap=document.getElementById('homeFormatWrap');
+  selectedHomeFormat=null;
+  document.querySelectorAll('.home-format-btn').forEach(b=>b.classList.remove('active'));
+
+  if(!value){
+    formatWrap.classList.remove('show');
+    setHomeContinue('SELECT LEAGUE',false);
+    return;
+  }
+
+  if(value==='custom'){
+    formatWrap.classList.add('show');
+    setHomeContinue('SELECT DRAFT FORMAT',false);
+  }else{
+    formatWrap.classList.remove('show');
+    setHomeContinue('OPEN '+(value==='tecate'?'TECATE':'42O_68.9'),true);
+  }
+});
+
+document.querySelectorAll('.home-format-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  selectedHomeFormat=btn.dataset.homeFormat;
+  document.querySelectorAll('.home-format-btn').forEach(b=>b.classList.toggle('active',b===btn));
+  setHomeContinue('CONTINUE WITH '+selectedHomeFormat.toUpperCase(),true);
+}));
+
+document.getElementById('homeContinueBtn').addEventListener('click',()=>{
+  const profile=document.getElementById('homeLeagueSelect').value;
+  if(!profile)return;
+  if(profile==='custom'){
+    if(!selectedHomeFormat)return;
+    openLeagueFromHome('custom',selectedHomeFormat);
+  }else{
+    openLeagueFromHome(profile,'auction');
+  }
+});
+
+document.getElementById('changeLeagueBtn').addEventListener('click',showHomeScreen);
+
 
 document.querySelectorAll('[data-league]').forEach(el=>el.addEventListener('change',()=>{
   const k=el.dataset.league;
@@ -965,7 +1164,8 @@ function renderTotalRankings(){
   d.forEach(x=>{
     const row=document.createElement('div');
     row.className='rank-row';
-    row.innerHTML=`<div class="rank-overall">${x.overallRank}</div><div class="rank-posrank">${x.pos}${x.rank}</div><div class="rank-player">${x.player}</div><div class="rank-pos">${x.pos}</div><div class="rank-number">${x.ftps.toFixed(1)}</div><div class="rank-number rank-vosa">${x.vosa.toFixed(1)}</div>`;
+    const overallDisplay=snakeMode()?snakeCoordinateFromOverall(x.overallRank):x.overallRank;
+    row.innerHTML=`<div class="rank-overall">${overallDisplay}</div><div class="rank-posrank">${x.pos}${x.rank}</div><div class="rank-player">${x.player}</div><div class="rank-pos">${x.pos}</div><div class="rank-number">${x.ftps.toFixed(1)}</div><div class="rank-number rank-vosa">${x.vosa.toFixed(1)}</div>`;
     rankRows.appendChild(row);
   });
 }
@@ -1143,8 +1343,9 @@ function draftRosterDefs(){
   return out;
 }
 function candidateFitsSlot(c,s){
-  if(s.kind==='fixed')return c.type===s.type;if(['D/ST','K','HC'].includes(c.type))return false;
-  if(s.kind==='exact')return c.type===s.type;if(s.kind==='bench')return ['QB','RB','WR','TE'].includes(c.type);
+  if(s.kind==='fixed')return c.type===s.type;
+  if(s.kind==='exact')return c.type===s.type;
+  if(s.kind==='bench')return ['QB','RB','WR','TE','D/ST','K','HC'].includes(c.type);
   if(s.type==='SUPERFLEX')return ['QB','RB','WR','TE'].includes(c.type);if(s.type==='FLEX')return ['RB','WR','TE'].includes(c.type);return false;
 }
 function placeManagerPicks(managerId,picksOverride=null){
@@ -1152,7 +1353,7 @@ function placeManagerPicks(managerId,picksOverride=null){
   const picks=(picksOverride||draftState.picks).filter(p=>p.managerId===managerId).sort((a,b)=>a.pickNo-b.pickNo);
   picks.forEach(p=>{
     const c=candidateByKey(p.candidateKey);if(!c){overflow.push(p);return}let priority=[];
-    if(['D/ST','K','HC'].includes(c.type))priority=defs.filter(s=>s.kind==='fixed'&&s.type===c.type);
+    if(['D/ST','K','HC'].includes(c.type))priority=[...defs.filter(s=>s.kind==='fixed'&&s.type===c.type),...defs.filter(s=>s.kind==='bench')];
     else priority=[...defs.filter(s=>s.kind==='exact'&&s.type===c.type),...defs.filter(s=>s.kind==='flex'&&candidateFitsSlot(c,s)),...defs.filter(s=>s.kind==='bench')];
     const slot=priority.find(s=>!slotMap[s.id]);if(slot)slotMap[slot.id]=p;else overflow.push(p);
   });
@@ -1169,9 +1370,47 @@ function canPlaceCandidate(managerId,candidate,excludePickId=null){const fake={i
 function managerCanAfford(managerId,bid,excludePickId=null){return Number(bid)<=managerStats(managerId,excludePickId).maxBid}
 function saveAndRenderDraft(){saveDraftState();renderDraftAll();renderValue()}
 function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+
+function snakeMode(){
+  const shell=document.getElementById('appShell');
+  return shell?.dataset.draftFormat==='snake'||shell?.classList.contains('snake-mode');
+}
+function totalSnakeRounds(){return Math.max(1,derivedLeague().totalPlayers)}
+function snakeCoordinateFromOverall(overallPick){
+  const n=Math.max(1,Number(overallPick)||1),teams=Math.max(1,league.teams);
+  const round=Math.ceil(n/teams),inRound=((n-1)%teams)+1;
+  return round+'.'+inRound;
+}
+function overallFromSnakeCoordinate(round,managerSlot){
+  const teams=Math.max(1,league.teams),r=Math.max(1,Number(round)||1),m=Math.max(1,Math.min(teams,Number(managerSlot)||1));
+  const inRound=r%2===1?m:(teams-m+1);
+  return (r-1)*teams+inRound;
+}
+function expectedManagerIndexForPick(overallPick){
+  const teams=Math.max(1,league.teams),n=Math.max(1,Number(overallPick)||1),round=Math.ceil(n/teams),inRound=((n-1)%teams)+1;
+  return round%2===1?inRound-1:teams-inRound;
+}
+function expectedManagerForPick(overallPick){
+  return draftState.managers[expectedManagerIndexForPick(overallPick)]||draftState.managers[0]||null;
+}
+function projectedOverallPick(c){
+  if(!c)return null;
+  if(c.source&&Number.isFinite(Number(c.source.overallRank)))return Number(c.source.overallRank);
+  return null;
+}
+function projectedPickLabel(c){
+  const n=projectedOverallPick(c);return n?sankeSafeCoord(n):'—';
+}
+function sankeSafeCoord(n){return snakeCoordinateFromOverall(n)}
+function pickValueNumber(c,pick){
+  const proj=projectedOverallPick(c);
+  if(!proj||!pick)return null;
+  return Number(pick.pickNo)-proj;
+}
+
 function renderManagerSetup(){
   syncDraftManagers();const grid=document.getElementById('managerNameGrid'),my=document.getElementById('myManagerSelect');
-  document.getElementById('managerSetupLeague').textContent=profileStates[activeProfile].name+' · '+league.teams+' teams';grid.innerHTML='';my.innerHTML='';
+  document.getElementById('managerSetupLeague').textContent=profileStates[activeProfile].name+' · '+league.teams+' teams'+(snakeMode()?' · manager order = draft order':'');grid.innerHTML='';my.innerHTML='';
   draftState.managers.forEach((m,i)=>{
     const label=document.createElement('label');label.textContent='Manager '+(i+1);const inp=document.createElement('input');inp.type='text';inp.value=m.name;
     inp.addEventListener('input',()=>{m.name=inp.value.trim()||'Manager '+(i+1);saveDraftState();renderManagerSelects();renderDraftBoard()});label.appendChild(inp);grid.appendChild(label);
@@ -1183,7 +1422,7 @@ function renderManagerSelects(){
   [document.getElementById('nomManager'),document.getElementById('editPickManager')].forEach(sel=>{
     if(!sel)return;const old=sel.value;sel.innerHTML='';draftState.managers.forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name;sel.appendChild(o)});if(draftState.managers.some(m=>m.id===old))sel.value=old;
   });
-  const nom=document.getElementById('nomManager');if(nom&&!nom.value)nom.value=draftState.myManagerId;
+  const nom=document.getElementById('nomManager');if(nom){if(snakeMode()){const expected=expectedManagerForPick(nextPickNo());if(expected)nom.value=expected.id}else if(!nom.value)nom.value=draftState.myManagerId;}
 }
 function draftPosClass(pos){
   if(pos==='QB')return 'pos-qb';
@@ -1198,11 +1437,59 @@ function draftPosClass(pos){
   return 'pos-bench';
 }
 function renderDraftBoard(){
-  const board=document.getElementById('draftBoard');if(!board)return;const defs=draftRosterDefs(),managers=draftState.managers;
+  const board=document.getElementById('draftBoard');if(!board)return;
+  const managers=draftState.managers;
   const wideDraft=document.querySelector('.wrap')?.classList.contains('draft-wide')&&window.innerWidth>=1000;
   const cols=wideDraft?('70px repeat('+managers.length+', minmax(90px,1fr))'):('78px repeat('+managers.length+', 150px)');
   board.innerHTML='';board.style.minWidth=(78+managers.length*150)+'px';
-  const head=document.createElement('div');head.className='draft-board-row';head.style.gridTemplateColumns=cols;const first=document.createElement('div');first.className='draft-board-label';first.style.top='0';first.style.zIndex='8';first.textContent='Roster';head.appendChild(first);
+
+  if(snakeMode()){
+    const head=document.createElement('div');head.className='draft-board-row';head.style.gridTemplateColumns=cols;
+    const first=document.createElement('div');first.className='draft-board-label';first.style.top='0';first.style.zIndex='8';first.textContent='Round';head.appendChild(first);
+    managers.forEach(m=>{
+      const h=document.createElement('div');h.className='draft-manager-head'+(m.id===draftState.myManagerId?' my-team':'');
+      h.innerHTML='<div class="draft-manager-name">'+escapeHtml(m.name)+'</div>';
+      head.appendChild(h);
+    });
+    board.appendChild(head);
+
+    const byPickNo=new Map(draftState.picks.map(p=>[Number(p.pickNo),p]));
+    const rounds=totalSnakeRounds();
+    for(let round=1;round<=rounds;round++){
+      const row=document.createElement('div');row.className='draft-board-row';row.style.gridTemplateColumns=cols;
+      const lab=document.createElement('div');lab.className='draft-board-label';lab.textContent=round;row.appendChild(lab);
+
+      managers.forEach((m,managerIndex)=>{
+        const pickNo=overallFromSnakeCoordinate(round,managerIndex+1);
+        const pick=byPickNo.get(pickNo);
+        const coord=snakeCoordinateFromOverall(pickNo);
+
+        if(!pick){
+          const cell=document.createElement('div');
+          cell.className='snake-pick-cell';
+          cell.innerHTML='<div class="snake-pick-tag">'+coord+'</div><span class="draft-empty">—</span>';
+          row.appendChild(cell);return;
+        }
+
+        const c=candidateByKey(pick.candidateKey),btn=document.createElement('button');
+        btn.type='button';btn.className='snake-pick-cell filled '+draftPosClass(c?.type||'');
+        btn.innerHTML='<div class="snake-pick-tag">'+coord+'</div><div class="draft-cell-player">'+escapeHtml(c?c.name:'Unknown')+'</div><div class="draft-cell-comp">'+(c?.posLabel||'')+(c?.nfl?' · '+c.nfl:'')+'</div>';
+        btn.addEventListener('click',()=>openEditPick(pick.id));row.appendChild(btn);
+      });
+      board.appendChild(row);
+    }
+
+    const next=nextPickNo(),nextMgr=expectedManagerForPick(next);
+    document.getElementById('draftBoardMeta').textContent=league.teams+' managers · '+totalSnakeRounds()+' rounds · snake draft';
+    document.getElementById('draftPickLabel').textContent='Next Pick '+snakeCoordinateFromOverall(next)+(nextMgr?' · '+nextMgr.name:'');
+    const nom=document.getElementById('nomManager');
+    if(nom&&nextMgr)nom.value=nextMgr.id;
+    return;
+  }
+
+  const defs=draftRosterDefs();
+  const head=document.createElement('div');head.className='draft-board-row';head.style.gridTemplateColumns=cols;
+  const first=document.createElement('div');first.className='draft-board-label';first.style.top='0';first.style.zIndex='8';first.textContent='Roster';head.appendChild(first);
   managers.forEach(m=>{const st=managerStats(m.id),h=document.createElement('div');h.className='draft-manager-head'+(m.id===draftState.myManagerId?' my-team':'');h.innerHTML='<div class="draft-manager-name">'+escapeHtml(m.name)+'</div><div class="draft-manager-stats">Cash '+money(st.cash)+' · Max '+money(st.maxBid)+'</div><div class="draft-team-values">'+(hasHistory()?'H '+signedMoney(st.histDelta)+' · ':'')+'C '+signedMoney(st.calcDelta)+'</div>';head.appendChild(h)});board.appendChild(head);
   const placements={};managers.forEach(m=>placements[m.id]=placeManagerPicks(m.id));
   defs.forEach(def=>{const row=document.createElement('div');row.className='draft-board-row';row.style.gridTemplateColumns=cols;const lab=document.createElement('div');lab.className='draft-board-label';lab.textContent=def.label;row.appendChild(lab);
@@ -1210,7 +1497,8 @@ function renderDraftBoard(){
       const c=candidateByKey(pick.candidateKey),b=document.createElement('button');b.type='button';b.className='draft-cell '+draftPosClass(c?.type||def.type);b.innerHTML='<div class="draft-cell-player">'+escapeHtml(c?c.name:'Unknown')+'</div><div class="draft-cell-paid">Paid <b>'+money(pick.bid)+'</b></div><div class="draft-cell-comp">'+(hasHistory()?'H '+money(c?.hist||0)+' · ':'')+'C '+money(c?.calc||0)+'</div>';b.addEventListener('click',()=>openEditPick(pick.id));row.appendChild(b)});
     board.appendChild(row);
   });
-  document.getElementById('draftBoardMeta').textContent=league.teams+' managers · '+money(league.budget)+' budget · '+(league.flexType==='Superflex'?(league.flexLabel||'Superflex'):'FLEX');document.getElementById('draftLeagueCash').textContent=money(leagueCashRemaining());document.getElementById('draftPickLabel').textContent='Next Pick #'+nextPickNo();
+  document.getElementById('draftBoardMeta').textContent=league.teams+' managers · '+money(league.budget)+' budget · '+(league.flexType==='Superflex'?(league.flexLabel||'Superflex'):'FLEX');
+  document.getElementById('draftLeagueCash').textContent=money(leagueCashRemaining());document.getElementById('draftPickLabel').textContent='Next Pick #'+nextPickNo();
 }
 function nomCandidate(){return candidateByKey(nomSelectedKey)}
 function updateNomValues(){
@@ -1227,26 +1515,99 @@ function renderNomSuggestions(){
   const q=document.getElementById('nomSearch').value.trim().toLowerCase(),box=document.getElementById('nomSuggestions');if(!q){box.classList.remove('open');box.innerHTML='';return}
   const drafted=new Set(draftState.picks.map(p=>p.candidateKey)),matches=draftCandidates().filter(c=>!drafted.has(c.key)&&(c.name+' '+c.posLabel+' '+c.nfl).toLowerCase().includes(q)).slice(0,10);box.innerHTML='';
   if(!matches.length){box.innerHTML='<div class="picker-empty">No matching available players</div>';box.classList.add('open');return}
-  matches.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='nom-suggestion';b.innerHTML='<strong>'+escapeHtml(c.name)+'</strong><span>'+c.posLabel+' · C '+money(c.calc)+(hasHistory()?' · H '+money(c.hist):'')+'</span>';b.addEventListener('click',()=>selectNomCandidate(c));box.appendChild(b)});box.classList.add('open');
+  matches.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='nom-suggestion';const meta=snakeMode()?c.posLabel+' · '+c.nfl:c.posLabel+' · C '+money(c.calc)+(hasHistory()?' · H '+money(c.hist):'');b.innerHTML='<strong>'+escapeHtml(c.name)+'</strong><span>'+meta+'</span>';b.addEventListener('click',()=>selectNomCandidate(c));box.appendChild(b)});box.classList.add('open');
 }
 function resetNominator(){nomSelectedKey=null;document.getElementById('nomSearch').value='';document.getElementById('nomPlayerName').textContent='No player selected';document.getElementById('nomPlayerMeta').textContent='Search above to nominate a player.';document.getElementById('nomSelected').classList.add('empty');document.getElementById('nomBid').value=league.minBid;document.getElementById('nomMessage').textContent='';updateNomValues()}
 function lockDraftPick(){
-  const c=nomCandidate(),managerId=document.getElementById('nomManager').value,bid=Math.round(Number(document.getElementById('nomBid').value)||0),msg=document.getElementById('nomMessage');msg.textContent='';
-  if(!c){msg.textContent='Select a player first.';return}if(pickByCandidateKey(c.key)){msg.textContent='That player has already been drafted.';return}if(!managerById(managerId)){msg.textContent='Select a winning manager.';return}if(bid<league.minBid){msg.textContent='Bid must be at least '+money(league.minBid)+'.';return}
-  if(!canPlaceCandidate(managerId,c)){msg.textContent=managerById(managerId).name+' has no legal open roster slot for this player.';return}if(!managerCanAfford(managerId,bid)){msg.textContent='Bid exceeds '+managerById(managerId).name+"'s max bid of "+money(managerStats(managerId).maxBid)+'.';return}
-  draftState.picks.push({id:'pick_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),pickNo:nextPickNo(),candidateKey:c.key,managerId,bid});saveAndRenderDraft();resetNominator();
+  const c=nomCandidate(),managerId=document.getElementById('nomManager').value,msg=document.getElementById('nomMessage');msg.textContent='';
+  if(!c){msg.textContent='Select a player first.';return}
+  if(pickByCandidateKey(c.key)){msg.textContent='That player has already been drafted.';return}
+  if(!managerById(managerId)){msg.textContent='Select a winning manager.';return}
+
+  if(snakeMode()){
+    const pickNo=nextPickNo(),expected=expectedManagerForPick(pickNo);
+    if(expected&&managerId!==expected.id){msg.textContent='Pick '+snakeCoordinateFromOverall(pickNo)+' belongs to '+expected.name+'.';return}
+    if(!canPlaceCandidate(managerId,c)){msg.textContent=managerById(managerId).name+' has no legal open roster slot for this player.';return}
+    draftState.picks.push({id:'pick_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),pickNo,candidateKey:c.key,managerId,bid:0});
+    saveAndRenderDraft();resetNominator();return;
+  }
+
+  const bid=Math.round(Number(document.getElementById('nomBid').value)||0);
+  if(bid<league.minBid){msg.textContent='Bid must be at least '+money(league.minBid)+'.';return}
+  if(!canPlaceCandidate(managerId,c)){msg.textContent=managerById(managerId).name+' has no legal open roster slot for this player.';return}
+  if(!managerCanAfford(managerId,bid)){msg.textContent='Bid exceeds '+managerById(managerId).name+"'s max bid of "+money(managerStats(managerId).maxBid)+'.';return}
+  draftState.picks.push({id:'pick_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),pickNo:nextPickNo(),candidateKey:c.key,managerId,bid});
+  saveAndRenderDraft();resetNominator();
 }
 function renderBestFilters(){const box=document.getElementById('bestPositionFilters'),types=['ALL','QB','RB','WR','TE',...draftFixedTypes()];if(!types.includes(bestFilter))bestFilter='ALL';box.innerHTML='';types.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='best-filter'+(bestFilter===t?' active':'');b.textContent=t==='ALL'?'All':t;b.addEventListener('click',()=>{bestFilter=t;renderBestAvailable()});box.appendChild(b)})}
-function bestSortValue(c,key,pick){if(key==='bid')return pick?pick.bid:null;if(key==='name')return c.name;if(key==='nfl')return c.nfl;if(key==='hist')return c.hist;if(key==='posSort')return c.posSort;return c[key]}
-function renderBestAvailable(){
-  renderBestFilters();const draftedMap=new Map(draftState.picks.map(p=>[p.candidateKey,p]));let rows=draftCandidates().filter(c=>bestFilter==='ALL'||c.type===bestFilter).filter(c=>bestShowDrafted||!draftedMap.has(c.key));
-  rows.sort((a,b)=>{const pa=draftedMap.get(a.key),pb=draftedMap.get(b.key),av=bestSortValue(a,bestSort.key,pa),bv=bestSortValue(b,bestSort.key,pb);if(typeof av==='string'||typeof bv==='string')return String(av??'').localeCompare(String(bv??''))*bestSort.dir;const an=av==null?(bestSort.dir>0?Infinity:-Infinity):Number(av),bn=bv==null?(bestSort.dir>0?Infinity:-Infinity):Number(bv);return (an-bn)*bestSort.dir||(a.idx-b.idx)});
-  const body=document.getElementById('bestAvailableRows');body.innerHTML='';rows.forEach(c=>{const pick=draftedMap.get(c.key),tr=document.createElement('tr');if(pick)tr.className='drafted';tr.innerHTML='<td><b>'+escapeHtml(c.name)+'</b>'+(pick?'<span class="drafted-tag">DRAFTED</span>':'')+'</td><td>'+c.posLabel+'</td><td>'+c.nfl+'</td><td class="num">'+(pick?money(pick.bid):'—')+'</td><td class="num">'+money(c.calc)+'</td><td class="num hist-only">'+(hasHistory()?money(c.hist):'—')+'</td><td class="num">'+(c.ftps==null?'—':c.ftps.toFixed(1))+'</td><td class="num">'+(c.vosa==null?'—':c.vosa.toFixed(1))+'</td>';body.appendChild(tr)});
-  document.getElementById('toggleDraftedBest').textContent=bestShowDrafted?'Hide Drafted':'Show Drafted';document.querySelectorAll('[data-best-sort]').forEach(b=>{const base={name:'Player',posSort:'Pos',nfl:'NFL',bid:'Winning Bid',calc:'Calc',hist:'Hist',ftps:'Fantasy Pts',vosa:'VOSA'}[b.dataset.bestSort];b.textContent=base+(bestSort.key===b.dataset.bestSort?(bestSort.dir>0?' ↑':' ↓'):'')});
+function bestSortValue(c,key,pick){
+  if(key==='projectedPick')return projectedOverallPick(c);
+  if(key==='draftedPick')return pick?Number(pick.pickNo):null;
+  if(key==='pickValue')return pickValueNumber(c,pick);
+  if(key==='bid')return pick?pick.bid:null;
+  if(key==='name')return c.name;
+  if(key==='nfl')return c.nfl;
+  if(key==='hist')return c.hist;
+  if(key==='posSort')return c.posSort;
+  return c[key];
 }
-function openEditPick(id){const p=draftState.picks.find(x=>x.id===id);if(!p)return;const c=candidateByKey(p.candidateKey);editPickId=id;renderManagerSelects();document.getElementById('editPickName').textContent=c?.name||'Edit Pick';document.getElementById('editPickMeta').textContent='Pick #'+p.pickNo+' · '+(c?.posLabel||'');document.getElementById('editPickBid').value=p.bid;document.getElementById('editPickManager').value=p.managerId;document.getElementById('editPickMessage').textContent='';const ov=document.getElementById('draftEditOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false')}
+function renderBestAvailable(){
+  renderBestFilters();
+  const draftedMap=new Map(draftState.picks.map(p=>[p.candidateKey,p]));
+  let rows=draftCandidates().filter(c=>bestFilter==='ALL'||c.type===bestFilter).filter(c=>bestShowDrafted||!draftedMap.has(c.key));
+
+  rows.sort((a,b)=>{
+    const pa=draftedMap.get(a.key),pb=draftedMap.get(b.key),av=bestSortValue(a,bestSort.key,pa),bv=bestSortValue(b,bestSort.key,pb);
+    if(typeof av==='string'||typeof bv==='string')return String(av??'').localeCompare(String(bv??''))*bestSort.dir;
+    const an=av==null?(bestSort.dir>0?Infinity:-Infinity):Number(av),bn=bv==null?(bestSort.dir>0?Infinity:-Infinity):Number(bv);
+    return (an-bn)*bestSort.dir||(a.idx-b.idx);
+  });
+
+  const body=document.getElementById('bestAvailableRows');body.innerHTML='';
+  rows.forEach(c=>{
+    const pick=draftedMap.get(c.key),tr=document.createElement('tr');if(pick)tr.className='drafted';
+    const proj=projectedOverallPick(c),pv=pickValueNumber(c,pick);
+    const valueClass=pv==null?'':pv>0?'snake-value-pos':pv<0?'snake-value-neg':'snake-value-zero';
+    const valueText=pv==null?'—':(pv>0?'+':'')+pv;
+
+    tr.innerHTML=
+      '<td><b>'+escapeHtml(c.name)+'</b>'+(pick?'<span class="drafted-tag">DRAFTED</span>':'')+'</td>'+
+      '<td>'+c.posLabel+'</td>'+
+      '<td>'+c.nfl+'</td>'+
+      '<td class="num snake-only">'+(proj?snakeCoordinateFromOverall(proj):'—')+'</td>'+
+      '<td class="num snake-only">'+(pick?snakeCoordinateFromOverall(pick.pickNo):'—')+'</td>'+
+      '<td class="num snake-only '+valueClass+'">'+valueText+'</td>'+
+      '<td class="num auction-only">'+(pick?money(pick.bid):'—')+'</td>'+
+      '<td class="num auction-only">'+money(c.calc)+'</td>'+
+      '<td class="num hist-only auction-only">'+(hasHistory()?money(c.hist):'—')+'</td>'+
+      '<td class="num">'+(c.ftps==null?'—':c.ftps.toFixed(1))+'</td>'+
+      '<td class="num">'+(c.vosa==null?'—':c.vosa.toFixed(1))+'</td>';
+    body.appendChild(tr);
+  });
+
+  document.getElementById('toggleDraftedBest').textContent=bestShowDrafted?'Hide Drafted':'Show Drafted';
+  document.querySelectorAll('[data-best-sort]').forEach(b=>{
+    const base={name:'Player',posSort:'Pos',nfl:'NFL',projectedPick:'Projected Pick',draftedPick:'Drafted Pick',pickValue:'Value',bid:'Winning Bid',calc:'Calc',hist:'Hist',ftps:'Fantasy Pts',vosa:'VOSA'}[b.dataset.bestSort];
+    b.textContent=base+(bestSort.key===b.dataset.bestSort?(bestSort.dir>0?' ↑':' ↓'):'');
+  });
+}
+function openEditPick(id){const p=draftState.picks.find(x=>x.id===id);if(!p)return;const c=candidateByKey(p.candidateKey);editPickId=id;renderManagerSelects();document.getElementById('editPickName').textContent=c?.name||'Edit Pick';document.getElementById('editPickMeta').textContent=(snakeMode()?'Pick '+snakeCoordinateFromOverall(p.pickNo):'Pick #'+p.pickNo)+' · '+(c?.posLabel||'');document.getElementById('editPickBid').value=p.bid;document.getElementById('editPickManager').value=p.managerId;document.getElementById('editPickMessage').textContent='';const ov=document.getElementById('draftEditOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false')}
 function closeEditPick(){editPickId=null;const ov=document.getElementById('draftEditOverlay');ov.classList.remove('open');ov.setAttribute('aria-hidden','true')}
-function saveEditPick(){const p=draftState.picks.find(x=>x.id===editPickId);if(!p)return;const c=candidateByKey(p.candidateKey),managerId=document.getElementById('editPickManager').value,bid=Math.round(Number(document.getElementById('editPickBid').value)||0),msg=document.getElementById('editPickMessage');if(bid<league.minBid){msg.textContent='Bid must be at least '+money(league.minBid)+'.';return}if(!canPlaceCandidate(managerId,c,p.id)){msg.textContent=managerById(managerId).name+' has no legal open slot for this player.';return}if(!managerCanAfford(managerId,bid,p.id)){msg.textContent='Bid exceeds max bid of '+money(managerStats(managerId,p.id).maxBid)+'.';return}p.managerId=managerId;p.bid=bid;saveAndRenderDraft();closeEditPick()}
+function saveEditPick(){
+  const p=draftState.picks.find(x=>x.id===editPickId);if(!p)return;
+  const c=candidateByKey(p.candidateKey),managerId=document.getElementById('editPickManager').value,msg=document.getElementById('editPickMessage');
+  if(snakeMode()){
+    const expected=expectedManagerForPick(p.pickNo);
+    if(expected&&managerId!==expected.id){msg.textContent='Pick '+snakeCoordinateFromOverall(p.pickNo)+' belongs to '+expected.name+'.';return}
+    if(!canPlaceCandidate(managerId,c,p.id)){msg.textContent=managerById(managerId).name+' has no legal open slot for this player.';return}
+    p.managerId=managerId;p.bid=0;saveAndRenderDraft();closeEditPick();return;
+  }
+  const bid=Math.round(Number(document.getElementById('editPickBid').value)||0);
+  if(bid<league.minBid){msg.textContent='Bid must be at least '+money(league.minBid)+'.';return}
+  if(!canPlaceCandidate(managerId,c,p.id)){msg.textContent=managerById(managerId).name+' has no legal open slot for this player.';return}
+  if(!managerCanAfford(managerId,bid,p.id)){msg.textContent='Bid exceeds max bid of '+money(managerStats(managerId,p.id).maxBid)+'.';return}
+  p.managerId=managerId;p.bid=bid;saveAndRenderDraft();closeEditPick();
+}
 function removeEditPick(){const p=draftState.picks.find(x=>x.id===editPickId);if(!p)return;const c=candidateByKey(p.candidateKey);if(!confirm('Remove '+(c?.name||'this player')+' from the draft?'))return;draftState.picks=draftState.picks.filter(x=>x.id!==p.id);saveAndRenderDraft();closeEditPick()}
 function renderDraftAll(){if(!draftState)return;syncDraftManagers();renderManagerSetup();renderManagerSelects();renderDraftBoard();renderBestAvailable();updateNomValues()}
 
@@ -1258,7 +1619,7 @@ document.querySelectorAll('.draft-subtab').forEach(btn=>btn.addEventListener('cl
   const wide=btn.dataset.draftPanel==='draftLive';
   document.querySelector('.wrap')?.classList.toggle('draft-wide',wide);
   if(wide)setTimeout(renderDraftBoard,0);
-  if(btn.dataset.draftPanel==='draftGraphs')renderValue();
+  if(btn.dataset.draftPanel==='draftGraphs'&&!snakeMode())renderValue();
 }));
 document.getElementById('nomSearch').addEventListener('input',()=>{
   nomSelectedKey=null;
@@ -1273,7 +1634,7 @@ document.getElementById('nomBidDown').addEventListener('click',()=>{const e=docu
 document.getElementById('nomBidUp').addEventListener('click',()=>{const e=document.getElementById('nomBid');e.value=(Number(e.value)||league.minBid)+1;updateNomValues()});
 document.getElementById('lockDraftPick').addEventListener('click',lockDraftPick);
 document.getElementById('toggleDraftedBest').addEventListener('click',()=>{bestShowDrafted=!bestShowDrafted;renderBestAvailable()});
-document.querySelectorAll('[data-best-sort]').forEach(btn=>btn.addEventListener('click',()=>{const k=btn.dataset.bestSort;if(bestSort.key===k)bestSort.dir*=-1;else{bestSort.key=k;bestSort.dir=(k==='name'||k==='nfl')?1:-1}renderBestAvailable()}));
+document.querySelectorAll('[data-best-sort]').forEach(btn=>btn.addEventListener('click',()=>{const k=btn.dataset.bestSort;if(bestSort.key===k)bestSort.dir*=-1;else{bestSort.key=k;bestSort.dir=(k==='name'||k==='nfl'||k==='projectedPick'||k==='draftedPick')?1:-1}renderBestAvailable()}));
 document.getElementById('clearDraftBtn').addEventListener('click',()=>{if(!draftState.picks.length)return;if(confirm('Clear all draft results for '+profileStates[activeProfile].name+'? Manager names will be kept.')){draftState.picks=[];saveAndRenderDraft();resetNominator()}});
 document.getElementById('editPickClose').addEventListener('click',closeEditPick);
 document.getElementById('saveDraftPick').addEventListener('click',saveEditPick);
